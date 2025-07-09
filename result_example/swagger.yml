@@ -1,0 +1,522 @@
+openapi: 3.0.3
+info:
+  title: Audio Excursions API
+  description: |
+    API для платформы аудиоэкскурсий. Позволяет учреждениям культуры публиковать контент,
+    а пользователям — прослушивать экскурсии, оставлять оценки и комментарии.
+    API следует принципу "API First" и разработано в соответствии с внутренними гайдлайнами компании.
+  version: 1.0.0
+  contact:
+    name: API Support Team
+    url: https://support.city-tours.example.com
+    email: api-support@city-tours.example.com
+  x-api-id: c2b4e2f1-8d2c-5g0f-9b2b-8f4g9c1f5f8e
+  x-audience: external-public
+
+servers:
+  - url: https://api.city-tours.example.com/api/v1
+    description: Production Server
+
+tags:
+  - name: Institutions
+    description: Управление учреждениями культуры
+  - name: Audio Tours
+    description: Управление аудиоэкскурсиями
+  - name: Taxonomy
+    description: Управление тегами
+
+paths:
+  /institutions:
+    post:
+      tags:
+        - Institutions
+      summary: Создать новое учреждение
+      description: Администратор платформы создает новое учреждение.
+      operationId: createInstitution
+      security:
+        - BearerAuth: [platform.admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstitutionCreate'
+      responses:
+        '201':
+          description: Учреждение успешно создано.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institution'
+        '403':
+          description: Доступ запрещен.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Institutions
+      summary: Получить список учреждений
+      description: Возвращает публичный список всех учреждений.
+      operationId: listInstitutions
+      parameters:
+        - name: page
+          in: query
+          description: Номер страницы (начиная с 1).
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: size
+          in: query
+          description: Количество элементов на странице.
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        '200':
+          description: Список учреждений.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInstitutions'
+
+  /institutions/{institution_id}:
+    get:
+      tags:
+        - Institutions
+      summary: Получить информацию об учреждении
+      description: Возвращает детальную информацию о конкретном учреждении.
+      operationId: getInstitutionById
+      parameters:
+        - $ref: '#/components/parameters/InstitutionId'
+      responses:
+        '200':
+          description: Детальная информация об учреждении.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institution'
+        '404':
+          description: Учреждение не найдено.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Institutions
+      summary: Удалить учреждение
+      description: Администратор платформы удаляет учреждение.
+      operationId: deleteInstitution
+      security:
+        - BearerAuth: [platform.admin]
+      parameters:
+        - $ref: '#/components/parameters/InstitutionId'
+      responses:
+        '204':
+          description: Учреждение успешно удалено.
+        '403':
+          description: Доступ запрещен.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Конфликт. Нельзя удалить учреждение, у которого есть экскурсии.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /institutions/{institution_id}/audio-tours:
+    post:
+      tags:
+        - Audio Tours
+      summary: Создать новую аудиоэкскурсию для учреждения
+      description: Создает новую аудиоэкскурсию, которая будет принадлежать указанному учреждению.
+      operationId: createAudioTourForInstitution
+      security:
+        - BearerAuth: [tours.write]
+      parameters:
+        - $ref: '#/components/parameters/InstitutionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AudioTourCreate'
+      responses:
+        '201':
+          description: Экскурсия успешно создана.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioTour'
+        '403':
+          description: Доступ запрещен.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Audio Tours
+      summary: Получить список экскурсий учреждения
+      description: Возвращает список всех аудиоэкскурсий, созданных указанным учреждением.
+      operationId: listInstitutionTours
+      parameters:
+        - $ref: '#/components/parameters/InstitutionId'
+        - name: page
+          in: query
+          description: Номер страницы (начиная с 1).
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: size
+          in: query
+          description: Количество элементов на странице.
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        '200':
+          description: Список экскурсий учреждения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAudioTours'
+        '404':
+          description: Учреждение не найдено.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /institutions/{institution_id}/audio-tours/{tour_id}:
+    get:
+      tags:
+        - Audio Tours
+      summary: Получить детальную информацию об аудиоэкскурсии
+      description: Возвращает полную информацию о конкретной аудиоэкскурсии.
+      operationId: getNestedAudioTourById
+      parameters:
+        - $ref: '#/components/parameters/InstitutionId'
+        - $ref: '#/components/parameters/TourId'
+      responses:
+        '200':
+          description: Детальная информация об экскурсии.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioTourDetails'
+        '404':
+          description: Учреждение или экскурсия не найдены.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - Audio Tours
+      summary: Обновить аудиоэкскурсию
+      description: Администратор учреждения обновляет данные своей экскурсии.
+      operationId: updateNestedAudioTour
+      security:
+        - BearerAuth: [tours.write]
+      parameters:
+        - $ref: '#/components/parameters/InstitutionId'
+        - $ref: '#/components/parameters/TourId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AudioTourUpdate'
+      responses:
+        '200':
+          description: Экскурсия успешно обновлена.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioTour'
+        '403':
+          description: Доступ запрещен.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Audio Tours
+      summary: Удалить аудиоэкскурсию
+      description: Администратор учреждения удаляет свою экскурсию.
+      operationId: deleteNestedAudioTour
+      security:
+        - BearerAuth: [tours.write]
+      parameters:
+        - $ref: '#/components/parameters/InstitutionId'
+        - $ref: '#/components/parameters/TourId'
+      responses:
+        '204':
+          description: Экскурсия успешно удалена.
+        '403':
+          description: Доступ запрещен.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /tags:
+    get:
+      tags:
+        - Taxonomy
+      summary: Получить список тегов
+      operationId: listTags
+      responses:
+        '200':
+          description: Список тегов.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tag'
+    post:
+      tags:
+        - Taxonomy
+      summary: Создать новый тег
+      operationId: createTag
+      security:
+        - BearerAuth: [platform.admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  example: 'Импрессионизм'
+      responses:
+        '201':
+          description: Тег успешно создан.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+
+  /tags/{tag_id}:
+    delete:
+      tags:
+        - Taxonomy
+      summary: Удалить тег
+      description: Администратор платформы удаляет тег.
+      operationId: deleteTag
+      security:
+        - BearerAuth: [platform.admin]
+      parameters:
+        - $ref: '#/components/parameters/TagId'
+      responses:
+        '204':
+          description: Тег успешно удален.
+        '409':
+          description: Конфликт. Тег используется и не может быть удален.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    InstitutionId:
+      name: institution_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    TourId:
+      name: tour_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    TagId:
+      name: tag_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+    Institution:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        website_url:
+          type: string
+          format: uri
+          nullable: true
+    InstitutionCreate:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        website_url:
+          type: string
+          format: uri
+          nullable: true
+    Tag:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    AudioTourCreate:
+      type: object
+      required: [title, audio_url]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        audio_url:
+          type: string
+          format: uri
+        tags:
+          type: array
+          items:
+            type: string
+            format: uuid
+    AudioTourUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        audio_url:
+          type: string
+          format: uri
+        tags:
+          type: array
+          items:
+            type: string
+            format: uuid
+    AudioTourSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        institution_name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    AudioTour:
+      allOf:
+        - $ref: '#/components/schemas/AudioTourSummary'
+        - type: object
+          properties:
+            description:
+              type: string
+              nullable: true
+            audio_url:
+              type: string
+              format: uri
+            institution_id:
+              type: string
+              format: uuid
+    AudioTourDetails:
+      allOf:
+        - $ref: '#/components/schemas/AudioTour'
+        - type: object
+          properties:
+            institution:
+              $ref: '#/components/schemas/Institution'
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tag'
+    PaginatedAudioTours:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudioTourSummary'
+        total_elements:
+          type: integer
+          format: int64
+        total_pages:
+          type: integer
+          format: int32
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+    PaginatedInstitutions:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Institution'
+        total_elements:
+          type: integer
+          format: int64
+        total_pages:
+          type: integer
+          format: int32
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
