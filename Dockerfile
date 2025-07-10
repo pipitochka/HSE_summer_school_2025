@@ -3,7 +3,7 @@ FROM arm64v8/gradle:8.4-jdk17 AS build
 WORKDIR /app
 
 # Копируем только файлы сборки для кэширования зависимостей
-COPY build.gradle.kts settings.gradle.kts ./
+COPY build.gradle.kts ./
 COPY gradle ./gradle
 COPY gradlew ./
 RUN chmod +x ./gradlew
