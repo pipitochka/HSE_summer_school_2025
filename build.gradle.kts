@@ -65,8 +65,8 @@ val openApiGenerate by tasks.getting(GenerateTask::class) {
 	generatorName.set("spring")
 	inputSpec.set("$projectDir/openapi.yml")
 	outputDir.set("$buildDir/generated")
-	apiPackage.set("com.organizer.todo.api")
-	modelPackage.set("com.organizer.todo.dto")
+	apiPackage.set("com.audiotour.api")
+	modelPackage.set("com.audiotour.dto")
 	configOptions.set(mapOf(
 		"interfaceOnly" to "true",
 		"useSpringBoot3" to "true",
