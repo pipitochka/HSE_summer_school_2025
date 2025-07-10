@@ -23,7 +23,7 @@ import jakarta.annotation.Generated;
  * Institution
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-09T23:19:23.122970+03:00[Europe/Moscow]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-10T12:35:57.113105+03:00[Europe/Moscow]")
 public class Institution {
 
   private UUID id;

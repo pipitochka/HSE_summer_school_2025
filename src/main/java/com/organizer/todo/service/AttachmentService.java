@@ -1,11 +1,11 @@
-package com.audiotour.service;
+package com.organizer.todo.service;
 
 import com.audiotour.dto.AttachmentMetadata;
-import com.audiotour.exception.ResourceNotFoundException;
-import com.audiotour.model.postgres.Attachment;
-import com.audiotour.model.postgres.AudioTour;
-import com.audiotour.repository.postgres.AttachmentRepository;
-import com.audiotour.repository.postgres.AudioTourRepository;
+import com.organizer.todo.exception.ResourceNotFoundException;
+import com.organizer.todo.model.postgres.Attachment;
+import com.organizer.todo.model.postgres.AudioTour;
+import com.organizer.todo.repository.postgres.AttachmentRepository;
+import com.organizer.todo.repository.postgres.AudioTourRepository;
 import io.minio.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

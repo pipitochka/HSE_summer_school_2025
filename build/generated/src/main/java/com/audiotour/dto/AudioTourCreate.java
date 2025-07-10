@@ -25,12 +25,14 @@ import jakarta.annotation.Generated;
  * AudioTourCreate
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-09T23:19:23.122970+03:00[Europe/Moscow]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-10T12:35:57.113105+03:00[Europe/Moscow]")
 public class AudioTourCreate {
 
   private String title;
 
   private JsonNullable<String> description = JsonNullable.undefined();
+
+  private UUID institutionId;
 
   private URI audioUrl;
 
@@ -94,6 +96,26 @@ public class AudioTourCreate {
     this.description = description;
   }
 
+  public AudioTourCreate institutionId(UUID institutionId) {
+    this.institutionId = institutionId;
+    return this;
+  }
+
+  /**
+   * Get institutionId
+   * @return institutionId
+  */
+  @Valid 
+  @Schema(name = "institutionId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("institutionId")
+  public UUID getInstitutionId() {
+    return institutionId;
+  }
+
+  public void setInstitutionId(UUID institutionId) {
+    this.institutionId = institutionId;
+  }
+
   public AudioTourCreate audioUrl(URI audioUrl) {
     this.audioUrl = audioUrl;
     return this;
@@ -153,6 +175,7 @@ public class AudioTourCreate {
     AudioTourCreate audioTourCreate = (AudioTourCreate) o;
     return Objects.equals(this.title, audioTourCreate.title) &&
         equalsNullable(this.description, audioTourCreate.description) &&
+        Objects.equals(this.institutionId, audioTourCreate.institutionId) &&
         Objects.equals(this.audioUrl, audioTourCreate.audioUrl) &&
         Objects.equals(this.tags, audioTourCreate.tags);
   }
@@ -163,7 +186,7 @@ public class AudioTourCreate {
 
   @Override
   public int hashCode() {
-    return Objects.hash(title, hashCodeNullable(description), audioUrl, tags);
+    return Objects.hash(title, hashCodeNullable(description), institutionId, audioUrl, tags);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -179,6 +202,7 @@ public class AudioTourCreate {
     sb.append("class AudioTourCreate {\n");
     sb.append("    title: ").append(toIndentedString(title)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    institutionId: ").append(toIndentedString(institutionId)).append("\n");
     sb.append("    audioUrl: ").append(toIndentedString(audioUrl)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
     sb.append("}");

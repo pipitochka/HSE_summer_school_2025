@@ -1,8 +1,9 @@
-package com.audiotour.controller;
+package com.organizer.todo.controller;
 
 import com.audiotour.api.TagsApi;
 import com.audiotour.dto.*;
-import com.audiotour.service.TagService;
+import com.organizer.todo.model.postgres.MyTag;
+import com.organizer.todo.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +19,21 @@ public class TagController implements TagsApi {
     private final TagService tagService;
 
     @Override
-    public ResponseEntity<Tag> createTag(TagCreate tagCreate) {
-        Tag created = tagService.createTag(tagCreate);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    public ResponseEntity<ListTags200Response> listTags() {
+        List<TagDto> tags = tagService.listTags();
+        return ResponseEntity.ok(new ListTags200Response().items(tags));
     }
 
+    /**
+     * POST /tags : Создать новый тег
+     *
+     * @param createTagRequest (required)
+     * @return Тег успешно создан. (status code 201)
+     */
     @Override
-    public ResponseEntity<ListTags200Response> listTags() {
-        List<Tag> tags = tagService.listTags();
-        return ResponseEntity.ok(new ListTags200Response().items(tags));
+    public ResponseEntity<TagDto> createTag(CreateTagRequest createTagRequest) {
+        TagDto created = tagService.createTag(createTagRequest.getName());
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @Override

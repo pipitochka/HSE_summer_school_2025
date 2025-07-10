@@ -46,10 +46,10 @@ dependencies {
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.flywaydb:flyway-database-postgresql")
 
-	// OpenAPI
+	//OpenAPI
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3")
 
-	// S3
+	// S3 (MinIO)
 	implementation("io.minio:minio:8.5.9")
 
 	// Utils
@@ -57,21 +57,16 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 
-	// Logging
-	implementation("org.slf4j:slf4j-api:2.0.13")
-	implementation("ch.qos.logback:logback-classic:1.4.14")
-
 	// Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 val openApiGenerate by tasks.getting(GenerateTask::class) {
 	generatorName.set("spring")
-	inputSpec.set("$projectDir/openapi.yml") // <--- убедись в названии файла!
+	inputSpec.set("$projectDir/openapi.yml")
 	outputDir.set("$buildDir/generated")
-	apiPackage.set("com.audiotour.api")
-	modelPackage.set("com.audiotour.dto")
-
+	apiPackage.set("com.organizer.todo.api")
+	modelPackage.set("com.organizer.todo.dto")
 	configOptions.set(mapOf(
 		"interfaceOnly" to "true",
 		"useSpringBoot3" to "true",
@@ -91,4 +86,3 @@ tasks.withType<JavaCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
-

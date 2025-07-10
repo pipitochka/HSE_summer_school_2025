@@ -47,13 +47,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Institution'
+                $ref: '#/components/schemas/InstitutionDto'
         '403':
           description: Доступ запрещен.
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/MyError'
     get:
       tags:
         - Institutions
@@ -98,13 +98,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Institution'
+                $ref: '#/components/schemas/InstitutionDto'
         '404':
           description: Учреждение не найдено.
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/MyError'
     delete:
       tags:
         - Institutions
@@ -123,13 +123,13 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/MyError'
         '409':
           description: Конфликт. Нельзя удалить учреждение, у которого есть экскурсии.
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/MyError'
 
   /institutions/{institution_id}/audio-tours:
     post:
@@ -154,13 +154,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AudioTour'
+                $ref: '#/components/schemas/AudioTourDto'
         '403':
           description: Доступ запрещен.
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/MyError'
     get:
       tags:
         - Audio Tours
@@ -195,7 +195,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/MyError'
 
   /institutions/{institution_id}/audio-tours/{tour_id}:
     get:
@@ -219,7 +219,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/MyError'
     patch:
       tags:
         - Audio Tours
@@ -243,13 +243,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AudioTour'
+                $ref: '#/components/schemas/AudioTourDto'
         '403':
           description: Доступ запрещен.
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/MyError'
     delete:
       tags:
         - Audio Tours
@@ -269,7 +269,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/MyError'
 
   /tags:
     get:
@@ -288,7 +288,7 @@ paths:
                   items:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Tag'
+                      $ref: '#/components/schemas/TagDto'
     post:
       tags:
         - Taxonomy
@@ -313,7 +313,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tag'
+                $ref: '#/components/schemas/TagDto'
 
   /tags/{tag_id}:
     delete:
@@ -334,7 +334,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/MyError'
 
 components:
   securitySchemes:
@@ -367,7 +367,7 @@ components:
         format: uuid
 
   schemas:
-    Error:
+    MyError:
       type: object
       properties:
         type:
@@ -404,14 +404,18 @@ components:
           type: string
           format: uri
           nullable: true
-    Tag:
+    TagDto:
       type: object
       properties:
         id:
           type: string
           format: uuid
+          description: "Уникальный идентификатор тега"
         name:
           type: string
+          description: "Название тега"
+      required:
+        - name
     AudioTourCreate:
       type: object
       required: [title, audio_url]
@@ -421,6 +425,9 @@ components:
         description:
           type: string
           nullable: true
+        institutionId:
+          type: string
+          format: uuid
         audio_url:
           type: string
           format: uri
@@ -481,7 +488,7 @@ components:
             tags:
               type: array
               items:
-                $ref: '#/components/schemas/Tag'
+                $ref: '#/components/schemas/TagDto'
     PaginatedAudioTours:
       type: object
       properties:
@@ -520,3 +527,87 @@ components:
         size:
           type: integer
           format: int32
+    AttachmentMetadata:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        filename:
+          type: string
+        url:
+          type: string
+          format: uri
+        size_bytes:
+          type: integer
+          format: int64
+        uploaded_at:
+          type: string
+          format: date-time
+    InstitutionDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        websiteUrl:
+          type: string
+          format: uri
+    InstitutionUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        websiteUrl:
+          type: string
+          format: uri
+          nullable: true
+
+    AudioTourDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        audioUrl:
+          type: string
+          format: uri
+        institutionId:
+          type: string
+          format: uuid
+        tagIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        createdAt:
+          type: string
+          format: date-time
+    TagCreate:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "Импрессионизм"
+          description: "Уникальное имя тега"
+
+
+
+
+
+

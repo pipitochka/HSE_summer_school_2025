@@ -1,8 +1,15 @@
-package com.audiotour.service;
+package com.organizer.todo.service;
 
-import com.audiotour.dto.*;
-import com.audiotour.model.postgres.*;
 
+
+import com.audiotour.dto.AttachmentMetadata;
+import com.audiotour.dto.AudioTourDto;
+import com.audiotour.dto.InstitutionDto;
+import com.audiotour.dto.TagDto;
+import com.organizer.todo.model.postgres.Attachment;
+import com.organizer.todo.model.postgres.AudioTour;
+import com.organizer.todo.model.postgres.Institution;
+import com.organizer.todo.model.postgres.MyTag;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,7 +38,7 @@ public class DtoMapper {
                 .institutionId(tour.getInstitution().getId());
     }
 
-    public TagDto toTagDto(Tag tag) {
+    public TagDto toTagDto(MyTag tag) {
         return new TagDto()
                 .id(tag.getId())
                 .name(tag.getName());

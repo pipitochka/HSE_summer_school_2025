@@ -1,4 +1,4 @@
-package com.audiotour.model.postgres;
+package com.organizer.todo.model.postgres;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,7 +35,7 @@ public class AudioTour {
         joinColumns = @JoinColumn(name = "audio_tour_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private Set<Tag> tags;
+    private Set<MyTag> tags;
 
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;

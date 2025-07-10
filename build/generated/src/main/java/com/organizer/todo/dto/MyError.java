@@ -1,4 +1,4 @@
-package com.audiotour.dto;
+package com.organizer.todo.dto;
 
 import java.net.URI;
 import java.util.Objects;
@@ -15,11 +15,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * Error
+ * MyError
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-09T23:19:23.122970+03:00[Europe/Moscow]")
-public class Error {
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-10T12:39:26.405200+03:00[Europe/Moscow]")
+public class MyError {
 
   private String type;
 
@@ -27,7 +27,7 @@ public class Error {
 
   private Integer status;
 
-  public Error type(String type) {
+  public MyError type(String type) {
     this.type = type;
     return this;
   }
@@ -47,7 +47,7 @@ public class Error {
     this.type = type;
   }
 
-  public Error title(String title) {
+  public MyError title(String title) {
     this.title = title;
     return this;
   }
@@ -67,7 +67,7 @@ public class Error {
     this.title = title;
   }
 
-  public Error status(Integer status) {
+  public MyError status(Integer status) {
     this.status = status;
     return this;
   }
@@ -95,10 +95,10 @@ public class Error {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Error error = (Error) o;
-    return Objects.equals(this.type, error.type) &&
-        Objects.equals(this.title, error.title) &&
-        Objects.equals(this.status, error.status);
+    MyError myError = (MyError) o;
+    return Objects.equals(this.type, myError.type) &&
+        Objects.equals(this.title, myError.title) &&
+        Objects.equals(this.status, myError.status);
   }
 
   @Override
@@ -109,7 +109,7 @@ public class Error {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Error {\n");
+    sb.append("class MyError {\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    title: ").append(toIndentedString(title)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");

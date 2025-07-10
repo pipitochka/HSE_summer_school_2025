@@ -6,9 +6,9 @@
 package com.audiotour.api;
 
 import com.audiotour.dto.CreateTagRequest;
-import com.audiotour.dto.Error;
 import com.audiotour.dto.ListTags200Response;
-import com.audiotour.dto.Tag;
+import com.audiotour.dto.MyError;
+import com.audiotour.dto.TagDto;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-09T23:19:23.122970+03:00[Europe/Moscow]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-10T12:35:57.113105+03:00[Europe/Moscow]")
 @Validated
 @Tag(name = "Taxonomy", description = "Управление тегами")
 public interface TagsApi {
@@ -53,7 +53,7 @@ public interface TagsApi {
         tags = { "Taxonomy" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Тег успешно создан.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Tag.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = TagDto.class))
             })
         },
         security = {
@@ -66,7 +66,7 @@ public interface TagsApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    ResponseEntity<Tag> createTag(
+    ResponseEntity<TagDto> createTag(
         @Parameter(name = "CreateTagRequest", description = "", required = true) @Valid @RequestBody CreateTagRequest createTagRequest
     );
 
@@ -87,7 +87,7 @@ public interface TagsApi {
         responses = {
             @ApiResponse(responseCode = "204", description = "Тег успешно удален."),
             @ApiResponse(responseCode = "409", description = "Конфликт. Тег используется и не может быть удален.", content = {
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Error.class))
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = MyError.class))
             })
         },
         security = {

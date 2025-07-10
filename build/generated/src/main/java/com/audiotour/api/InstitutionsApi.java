@@ -5,13 +5,13 @@
  */
 package com.audiotour.api;
 
-import com.audiotour.dto.AudioTour;
 import com.audiotour.dto.AudioTourCreate;
 import com.audiotour.dto.AudioTourDetails;
+import com.audiotour.dto.AudioTourDto;
 import com.audiotour.dto.AudioTourUpdate;
-import com.audiotour.dto.Error;
-import com.audiotour.dto.Institution;
 import com.audiotour.dto.InstitutionCreate;
+import com.audiotour.dto.InstitutionDto;
+import com.audiotour.dto.MyError;
 import com.audiotour.dto.PaginatedAudioTours;
 import com.audiotour.dto.PaginatedInstitutions;
 import java.util.UUID;
@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-09T23:19:23.122970+03:00[Europe/Moscow]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-10T12:35:57.113105+03:00[Europe/Moscow]")
 @Validated
 @Tag(name = "Audio Tours", description = "Управление аудиоэкскурсиями")
 public interface InstitutionsApi {
@@ -62,12 +62,12 @@ public interface InstitutionsApi {
         tags = { "Audio Tours" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Экскурсия успешно создана.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = AudioTour.class)),
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = AudioTour.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = AudioTourDto.class)),
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = AudioTourDto.class))
             }),
             @ApiResponse(responseCode = "403", description = "Доступ запрещен.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)),
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Error.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = MyError.class)),
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = MyError.class))
             })
         },
         security = {
@@ -80,7 +80,7 @@ public interface InstitutionsApi {
         produces = { "application/json", "application/problem+json" },
         consumes = { "application/json" }
     )
-    ResponseEntity<AudioTour> createAudioTourForInstitution(
+    ResponseEntity<AudioTourDto> createAudioTourForInstitution(
         @Parameter(name = "institution_id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("institution_id") UUID institutionId,
         @Parameter(name = "AudioTourCreate", description = "", required = true) @Valid @RequestBody AudioTourCreate audioTourCreate
     );
@@ -101,12 +101,12 @@ public interface InstitutionsApi {
         tags = { "Institutions" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Учреждение успешно создано.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Institution.class)),
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Institution.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = InstitutionDto.class)),
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = InstitutionDto.class))
             }),
             @ApiResponse(responseCode = "403", description = "Доступ запрещен.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)),
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Error.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = MyError.class)),
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = MyError.class))
             })
         },
         security = {
@@ -119,7 +119,7 @@ public interface InstitutionsApi {
         produces = { "application/json", "application/problem+json" },
         consumes = { "application/json" }
     )
-    ResponseEntity<Institution> createInstitution(
+    ResponseEntity<InstitutionDto> createInstitution(
         @Parameter(name = "InstitutionCreate", description = "", required = true) @Valid @RequestBody InstitutionCreate institutionCreate
     );
 
@@ -141,10 +141,10 @@ public interface InstitutionsApi {
         responses = {
             @ApiResponse(responseCode = "204", description = "Учреждение успешно удалено."),
             @ApiResponse(responseCode = "403", description = "Доступ запрещен.", content = {
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Error.class))
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = MyError.class))
             }),
             @ApiResponse(responseCode = "409", description = "Конфликт. Нельзя удалить учреждение, у которого есть экскурсии.", content = {
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Error.class))
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = MyError.class))
             })
         },
         security = {
@@ -178,7 +178,7 @@ public interface InstitutionsApi {
         responses = {
             @ApiResponse(responseCode = "204", description = "Экскурсия успешно удалена."),
             @ApiResponse(responseCode = "403", description = "Доступ запрещен.", content = {
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Error.class))
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = MyError.class))
             })
         },
         security = {
@@ -211,12 +211,12 @@ public interface InstitutionsApi {
         tags = { "Institutions" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Детальная информация об учреждении.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Institution.class)),
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Institution.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = InstitutionDto.class)),
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = InstitutionDto.class))
             }),
             @ApiResponse(responseCode = "404", description = "Учреждение не найдено.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)),
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Error.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = MyError.class)),
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = MyError.class))
             })
         }
     )
@@ -225,7 +225,7 @@ public interface InstitutionsApi {
         value = "/institutions/{institution_id}",
         produces = { "application/json", "application/problem+json" }
     )
-    ResponseEntity<Institution> getInstitutionById(
+    ResponseEntity<InstitutionDto> getInstitutionById(
         @Parameter(name = "institution_id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("institution_id") UUID institutionId
     );
 
@@ -250,8 +250,8 @@ public interface InstitutionsApi {
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = AudioTourDetails.class))
             }),
             @ApiResponse(responseCode = "404", description = "Учреждение или экскурсия не найдены.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)),
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Error.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = MyError.class)),
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = MyError.class))
             })
         }
     )
@@ -287,8 +287,8 @@ public interface InstitutionsApi {
                 @Content(mediaType = "application/problem+json", schema = @Schema(implementation = PaginatedAudioTours.class))
             }),
             @ApiResponse(responseCode = "404", description = "Учреждение не найдено.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)),
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Error.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = MyError.class)),
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = MyError.class))
             })
         }
     )
@@ -351,12 +351,12 @@ public interface InstitutionsApi {
         tags = { "Audio Tours" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Экскурсия успешно обновлена.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = AudioTour.class)),
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = AudioTour.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = AudioTourDto.class)),
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = AudioTourDto.class))
             }),
             @ApiResponse(responseCode = "403", description = "Доступ запрещен.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)),
-                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = Error.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = MyError.class)),
+                @Content(mediaType = "application/problem+json", schema = @Schema(implementation = MyError.class))
             })
         },
         security = {
@@ -369,7 +369,7 @@ public interface InstitutionsApi {
         produces = { "application/json", "application/problem+json" },
         consumes = { "application/json" }
     )
-    ResponseEntity<AudioTour> updateNestedAudioTour(
+    ResponseEntity<AudioTourDto> updateNestedAudioTour(
         @Parameter(name = "institution_id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("institution_id") UUID institutionId,
         @Parameter(name = "tour_id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tour_id") UUID tourId,
         @Parameter(name = "AudioTourUpdate", description = "", required = true) @Valid @RequestBody AudioTourUpdate audioTourUpdate

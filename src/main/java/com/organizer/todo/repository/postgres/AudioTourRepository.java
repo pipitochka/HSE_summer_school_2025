@@ -1,7 +1,8 @@
-package com.audiotour.repository.postgres;
+package com.organizer.todo.repository.postgres;
 
-import com.audiotour.model.postgres.AudioTour;
-import com.audiotour.model.postgres.Institution;
+
+import com.organizer.todo.model.postgres.AudioTour;
+import com.organizer.todo.model.postgres.Institution;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

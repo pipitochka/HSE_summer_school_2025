@@ -2,7 +2,7 @@ package com.audiotour.dto;
 
 import java.net.URI;
 import java.util.Objects;
-import com.audiotour.dto.Tag;
+import com.audiotour.dto.TagDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -23,18 +23,18 @@ import jakarta.annotation.Generated;
  */
 
 @JsonTypeName("listTags_200_response")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-09T23:19:23.122970+03:00[Europe/Moscow]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-10T12:35:57.113105+03:00[Europe/Moscow]")
 public class ListTags200Response {
 
   @Valid
-  private List<@Valid Tag> items;
+  private List<@Valid TagDto> items;
 
-  public ListTags200Response items(List<@Valid Tag> items) {
+  public ListTags200Response items(List<@Valid TagDto> items) {
     this.items = items;
     return this;
   }
 
-  public ListTags200Response addItemsItem(Tag itemsItem) {
+  public ListTags200Response addItemsItem(TagDto itemsItem) {
     if (this.items == null) {
       this.items = new ArrayList<>();
     }
@@ -49,11 +49,11 @@ public class ListTags200Response {
   @Valid 
   @Schema(name = "items", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("items")
-  public List<@Valid Tag> getItems() {
+  public List<@Valid TagDto> getItems() {
     return items;
   }
 
-  public void setItems(List<@Valid Tag> items) {
+  public void setItems(List<@Valid TagDto> items) {
     this.items = items;
   }
 

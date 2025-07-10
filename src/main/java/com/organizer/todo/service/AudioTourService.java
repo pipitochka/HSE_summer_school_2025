@@ -1,17 +1,18 @@
-package com.audiotour.service;
+package com.organizer.todo.service;
 
-import com.audiotour.dto.AudioTourDto;
 import com.audiotour.dto.AudioTourCreate;
+import com.audiotour.dto.AudioTourDto;
 import com.audiotour.dto.AudioTourUpdate;
-import com.audiotour.exception.ResourceNotFoundException;
-import com.audiotour.model.postgres.AudioTour;
-import com.audiotour.model.postgres.Institution;
-import com.audiotour.repository.postgres.AudioTourRepository;
-import com.audiotour.repository.postgres.InstitutionRepository;
+import com.organizer.todo.exception.ResourceNotFoundException;
+import com.organizer.todo.model.postgres.AudioTour;
+import com.organizer.todo.model.postgres.Institution;
+import com.organizer.todo.repository.postgres.AudioTourRepository;
+import com.organizer.todo.repository.postgres.InstitutionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -38,7 +39,7 @@ public class AudioTourService {
         AudioTour tour = AudioTour.builder()
                 .id(UUID.randomUUID())
                 .title(create.getTitle())
-                .description(create.getDescription())
+                .description(create.getDescription().orElse(null))
                 .institution(institution)
                 .build();
 
@@ -57,6 +58,10 @@ public class AudioTourService {
 
     public void deleteTour(UUID id) {
         audioTourRepository.deleteById(id);
+    }
+
+    public Optional<AudioTourDto> findTourById(UUID id) {
+        return null;
     }
 }
 

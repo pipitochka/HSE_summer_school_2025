@@ -1,4 +1,4 @@
-package com.audiotour.model.postgres;
+package com.organizer.todo.model.postgres;
 
 import jakarta.persistence.*;
 import lombok.*;

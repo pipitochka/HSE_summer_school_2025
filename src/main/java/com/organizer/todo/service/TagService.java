@@ -1,9 +1,9 @@
-package com.audiotour.service;
+package com.organizer.todo.service;
 
 import com.audiotour.dto.TagDto;
-import com.audiotour.exception.ConflictException;
-import com.audiotour.model.postgres.Tag;
-import com.audiotour.repository.postgres.TagRepository;
+import com.organizer.todo.exception.ConflictException;
+import com.organizer.todo.model.postgres.MyTag;
+import com.organizer.todo.repository.postgres.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class TagService {
             throw new ConflictException("Tag already exists: " + name);
         });
 
-        Tag tag = Tag.builder()
+        MyTag tag = MyTag.builder()
                 .id(UUID.randomUUID())
                 .name(name)
                 .build();

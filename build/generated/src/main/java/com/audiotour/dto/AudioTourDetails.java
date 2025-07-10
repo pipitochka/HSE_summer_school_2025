@@ -3,7 +3,7 @@ package com.audiotour.dto;
 import java.net.URI;
 import java.util.Objects;
 import com.audiotour.dto.Institution;
-import com.audiotour.dto.Tag;
+import com.audiotour.dto.TagDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.net.URI;
@@ -29,7 +29,7 @@ import jakarta.annotation.Generated;
  * AudioTourDetails
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-09T23:19:23.122970+03:00[Europe/Moscow]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-10T12:35:57.113105+03:00[Europe/Moscow]")
 public class AudioTourDetails {
 
   private UUID id;
@@ -50,7 +50,7 @@ public class AudioTourDetails {
   private Institution institution;
 
   @Valid
-  private List<@Valid Tag> tags;
+  private List<@Valid TagDto> tags;
 
   public AudioTourDetails id(UUID id) {
     this.id = id;
@@ -212,12 +212,12 @@ public class AudioTourDetails {
     this.institution = institution;
   }
 
-  public AudioTourDetails tags(List<@Valid Tag> tags) {
+  public AudioTourDetails tags(List<@Valid TagDto> tags) {
     this.tags = tags;
     return this;
   }
 
-  public AudioTourDetails addTagsItem(Tag tagsItem) {
+  public AudioTourDetails addTagsItem(TagDto tagsItem) {
     if (this.tags == null) {
       this.tags = new ArrayList<>();
     }
@@ -232,11 +232,11 @@ public class AudioTourDetails {
   @Valid 
   @Schema(name = "tags", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("tags")
-  public List<@Valid Tag> getTags() {
+  public List<@Valid TagDto> getTags() {
     return tags;
   }
 
-  public void setTags(List<@Valid Tag> tags) {
+  public void setTags(List<@Valid TagDto> tags) {
     this.tags = tags;
   }
 

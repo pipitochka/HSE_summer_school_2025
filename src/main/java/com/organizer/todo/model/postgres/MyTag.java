@@ -1,4 +1,4 @@
-package com.audiotour.model.postgres;
+package com.organizer.todo.model.postgres;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +11,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "tags")
-public class Tag {
+public class MyTag {
+
     @Id
     private UUID id;
 
