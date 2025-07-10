@@ -1,0 +1,31 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+
+spring:
+  # --- PostgreSQL ---
+  datasource:
+    url: jdbc:postgresql://localhost:5432/todo_db
+    username: user
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+
+  # --- Elasticsearch ---
+  elasticsearch:
+    uris: http://localhost:9200
+
+  # --- Jackson Nullable ---
+  jackson:
+    default-property-inclusion: non_null
+
+# --- MinIO (S3) Settings ---
+minio:
+  url: http://localhost:9003
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket-name: attachments
