@@ -22,7 +22,7 @@ import jakarta.annotation.Generated;
  * AttachmentMetadata
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-10T13:08:50.398387+03:00[Europe/Moscow]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-11T16:34:38.753307+03:00[Europe/Moscow]")
 public class AttachmentMetadata {
 
   private UUID id;

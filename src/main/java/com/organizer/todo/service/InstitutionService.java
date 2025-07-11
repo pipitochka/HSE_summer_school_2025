@@ -3,14 +3,15 @@ package com.organizer.todo.service;
 import com.audiotour.dto.InstitutionDto;
 import com.audiotour.dto.InstitutionCreate;
 import com.audiotour.dto.InstitutionUpdate;
+import com.audiotour.dto.PaginatedInstitutions;
 import com.organizer.todo.exception.ResourceNotFoundException;
 import com.organizer.todo.model.postgres.Institution;
 import com.organizer.todo.repository.postgres.InstitutionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,10 +22,9 @@ public class InstitutionService {
     private final InstitutionRepository institutionRepository;
     private final DtoMapper dtoMapper;
 
-    public List<InstitutionDto> listInstitutions() {
-        return institutionRepository.findAll().stream()
-                .map(dtoMapper::toInstitutionDto)
-                .toList();
+    public PaginatedInstitutions listInstitutions(Pageable pageable) {
+        return dtoMapper.toPaginatedInstitutions(institutionRepository.findAll(pageable)
+                .map(dtoMapper::toInstitution));
     }
 
     public InstitutionDto createInstitution(InstitutionCreate create) {
@@ -52,8 +52,9 @@ public class InstitutionService {
         institutionRepository.deleteById(id);
     }
 
-    public InstitutionDto getInstitutionById(UUID institutionId) {
-        return (InstitutionDto) institutionRepository.findAllById(Collections.singleton(institutionId));
+    public InstitutionDto getInstitutionById(UUID id) {
+        var entity = institutionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Institution not found: " + id));
+        return dtoMapper.toInstitutionDto(entity);
     }
 }
-

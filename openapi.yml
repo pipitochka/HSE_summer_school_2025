@@ -66,8 +66,8 @@ paths:
           description: Номер страницы (начиная с 1).
           schema:
             type: integer
-            default: 1
-            minimum: 1
+            default: 0
+            minimum: 0
         - name: size
           in: query
           description: Количество элементов на странице.

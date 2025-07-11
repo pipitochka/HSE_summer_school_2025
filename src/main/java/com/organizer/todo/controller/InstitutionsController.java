@@ -6,6 +6,7 @@ import com.audiotour.dto.*;
 import com.organizer.todo.service.AudioTourService;
 import com.organizer.todo.service.InstitutionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,7 +54,7 @@ public class InstitutionsController implements InstitutionsApi {
 
     @Override
     public ResponseEntity<PaginatedInstitutions> listInstitutions(Integer page, Integer size) {
-        PaginatedInstitutions result = (PaginatedInstitutions) institutionService.listInstitutions();
+        PaginatedInstitutions result = institutionService.listInstitutions(Pageable.ofSize(size).withPage(page));
         return ResponseEntity.ok(result);
     }
 

@@ -1,16 +1,15 @@
 package com.organizer.todo.service;
 
 
-
-import com.audiotour.dto.AttachmentMetadata;
-import com.audiotour.dto.AudioTourDto;
-import com.audiotour.dto.InstitutionDto;
-import com.audiotour.dto.TagDto;
+import com.audiotour.dto.*;
 import com.organizer.todo.model.postgres.Attachment;
 import com.organizer.todo.model.postgres.AudioTour;
 import com.organizer.todo.model.postgres.Institution;
 import com.organizer.todo.model.postgres.MyTag;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class DtoMapper {
@@ -30,6 +29,13 @@ public class DtoMapper {
                 .description(institution.getDescription());
     }
 
+    public com.audiotour.dto.Institution toInstitution(Institution institution) {
+        return new com.audiotour.dto.Institution()
+                .id(institution.getId())
+                .name(institution.getName())
+                .description(institution.getDescription());
+    }
+
     public AudioTourDto toAudioTourDto(AudioTour tour) {
         return new AudioTourDto()
                 .id(tour.getId())
@@ -42,6 +48,18 @@ public class DtoMapper {
         return new TagDto()
                 .id(tag.getId())
                 .name(tag.getName());
+    }
+
+    public PaginatedInstitutions toPaginatedInstitutions(Page<com.audiotour.dto.Institution> list) {
+        PaginatedInstitutions paginatedInstitutions = new PaginatedInstitutions();
+
+        paginatedInstitutions.setItems(list.getContent());
+        paginatedInstitutions.setPage(list.getPageable().getPageNumber());
+        paginatedInstitutions.setTotalElements(list.getTotalElements());
+        paginatedInstitutions.setSize(list.getPageable().getPageSize());
+        paginatedInstitutions.setTotalPages(list.getTotalPages());
+
+        return paginatedInstitutions;
     }
 }
 

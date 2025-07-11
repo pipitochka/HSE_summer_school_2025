@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-10T13:08:50.398387+03:00[Europe/Moscow]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-11T16:34:38.753307+03:00[Europe/Moscow]")
 @Validated
 @Tag(name = "Taxonomy", description = "Управление тегами")
 public interface TagsApi {

@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-10T13:08:50.398387+03:00[Europe/Moscow]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-11T16:34:38.753307+03:00[Europe/Moscow]")
 @Validated
 @Tag(name = "Audio Tours", description = "Управление аудиоэкскурсиями")
 public interface InstitutionsApi {
@@ -308,7 +308,7 @@ public interface InstitutionsApi {
      * GET /institutions : Получить список учреждений
      * Возвращает публичный список всех учреждений.
      *
-     * @param page Номер страницы (начиная с 1). (optional, default to 1)
+     * @param page Номер страницы (начиная с 1). (optional, default to 0)
      * @param size Количество элементов на странице. (optional, default to 20)
      * @return Список учреждений. (status code 200)
      */
@@ -329,7 +329,7 @@ public interface InstitutionsApi {
         produces = { "application/json" }
     )
     ResponseEntity<PaginatedInstitutions> listInstitutions(
-        @Min(1) @Parameter(name = "page", description = "Номер страницы (начиная с 1).", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+        @Min(0) @Parameter(name = "page", description = "Номер страницы (начиная с 1).", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
         @Max(100) @Parameter(name = "size", description = "Количество элементов на странице.", in = ParameterIn.QUERY) @Valid @RequestParam(value = "size", required = false, defaultValue = "20") Integer size
     );
 
