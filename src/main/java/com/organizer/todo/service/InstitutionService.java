@@ -4,6 +4,7 @@ import com.audiotour.dto.InstitutionDto;
 import com.audiotour.dto.InstitutionCreate;
 import com.audiotour.dto.InstitutionUpdate;
 import com.audiotour.dto.PaginatedInstitutions;
+import com.organizer.todo.exception.ConflictException;
 import com.organizer.todo.exception.ResourceNotFoundException;
 import com.organizer.todo.model.postgres.Institution;
 import com.organizer.todo.repository.postgres.InstitutionRepository;
@@ -28,6 +29,9 @@ public class InstitutionService {
     }
 
     public InstitutionDto createInstitution(InstitutionCreate create) {
+        if (institutionRepository.existsByName(create.getName())) {
+            throw new ConflictException("Institution with name " + create.getName() + " already exists");
+        }
         Institution institution = Institution.builder()
                 .id(UUID.randomUUID())
                 .name(create.getName())

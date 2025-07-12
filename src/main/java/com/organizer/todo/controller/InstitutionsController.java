@@ -3,6 +3,7 @@ package com.organizer.todo.controller;
 
 import com.audiotour.api.InstitutionsApi;
 import com.audiotour.dto.*;
+import com.organizer.todo.exception.ConflictException;
 import com.organizer.todo.service.AudioTourService;
 import com.organizer.todo.service.InstitutionService;
 import lombok.RequiredArgsConstructor;
@@ -48,8 +49,12 @@ public class InstitutionsController implements InstitutionsApi {
      */
     @Override
     public ResponseEntity<InstitutionDto> createInstitution(InstitutionCreate institutionCreate) {
-        InstitutionDto created = institutionService.createInstitution(institutionCreate);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        try {
+            InstitutionDto created = institutionService.createInstitution(institutionCreate);
+            return new ResponseEntity<>(created, HttpStatus.CREATED);
+        } catch (ConflictException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
 

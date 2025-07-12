@@ -48,12 +48,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InstitutionDto'
-        '403':
-          description: Доступ запрещен.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/MyError'
+        '409':
+          description: Институт уже существует.
     get:
       tags:
         - Institutions
