@@ -8,7 +8,6 @@ import com.organizer.todo.model.postgres.Institution;
 import com.organizer.todo.repository.postgres.AudioTourRepository;
 import com.organizer.todo.repository.postgres.InstitutionRepository;
 import com.organizer.todo.repository.postgres.TagRepository;
-import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
