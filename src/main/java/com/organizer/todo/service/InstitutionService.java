@@ -41,17 +41,6 @@ public class InstitutionService {
         return dtoMapper.toInstitutionDto(institutionRepository.save(institution));
     }
 
-    @Transactional
-    public InstitutionDto updateInstitution(UUID id, InstitutionUpdate update) {
-        Institution institution = institutionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Institution not found: " + id));
-
-        institution.setName(update.getName().orElse(null));
-        institution.setDescription(update.getDescription().orElse(null));
-
-        return dtoMapper.toInstitutionDto(institutionRepository.save(institution));
-    }
-
     public void deleteInstitution(UUID id) {
         institutionRepository.deleteById(id);
     }

@@ -1,6 +1,5 @@
 package com.organizer.todo.service;
 
-import com.audiotour.dto.AttachmentMetadata;
 import com.audiotour.dto.AudioTourDto;
 import com.organizer.todo.exception.ConflictException;
 import com.organizer.todo.exception.ResourceNotFoundException;
