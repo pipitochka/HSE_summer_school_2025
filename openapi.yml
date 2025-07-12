@@ -482,7 +482,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/Institution'
+            $ref: '#/components/schemas/InstitutionDto'
         total_elements:
           type: integer
           format: int64
@@ -495,23 +495,6 @@ components:
         size:
           type: integer
           format: int32
-    AttachmentMetadata:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        filename:
-          type: string
-        url:
-          type: string
-          format: uri
-        size_bytes:
-          type: integer
-          format: int64
-        uploaded_at:
-          type: string
-          format: date-time
     InstitutionDto:
       type: object
       properties:
@@ -525,20 +508,6 @@ components:
         websiteUrl:
           type: string
           format: uri
-    InstitutionUpdate:
-      type: object
-      properties:
-        name:
-          type: string
-          nullable: true
-        description:
-          type: string
-          nullable: true
-        websiteUrl:
-          type: string
-          format: uri
-          nullable: true
-
     AudioTourDto:
       type: object
       properties:

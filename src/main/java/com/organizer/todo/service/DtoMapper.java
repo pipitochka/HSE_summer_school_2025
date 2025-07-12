@@ -50,7 +50,7 @@ public class DtoMapper {
                 .name(tag.getName());
     }
 
-    public PaginatedInstitutions toPaginatedInstitutions(Page<com.audiotour.dto.Institution> list) {
+    public PaginatedInstitutions toPaginatedInstitutions(Page<com.audiotour.dto.InstitutionDto> list) {
         PaginatedInstitutions paginatedInstitutions = new PaginatedInstitutions();
 
         paginatedInstitutions.setItems(list.getContent());

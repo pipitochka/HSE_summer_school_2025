@@ -25,7 +25,7 @@ public class InstitutionService {
 
     public PaginatedInstitutions listInstitutions(Pageable pageable) {
         return dtoMapper.toPaginatedInstitutions(institutionRepository.findAll(pageable)
-                .map(dtoMapper::toInstitution));
+                .map(dtoMapper::toInstitutionDto));
     }
 
     public InstitutionDto createInstitution(InstitutionCreate create) {
