@@ -33,6 +33,7 @@ public class InstitutionsController implements InstitutionsApi {
      */
     @Override
     public ResponseEntity<AudioTourDto> createAudioTourForInstitution(UUID institutionId, AudioTourCreate audioTourCreate) {
+
         AudioTourDto created = audioTourService.createTour(audioTourCreate);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
