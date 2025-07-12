@@ -4,6 +4,7 @@ package com.organizer.todo.controller;
 import com.audiotour.api.InstitutionsApi;
 import com.audiotour.dto.*;
 import com.organizer.todo.exception.ConflictException;
+import com.organizer.todo.exception.ResourceNotFoundException;
 import com.organizer.todo.service.AudioTourService;
 import com.organizer.todo.service.InstitutionService;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +35,14 @@ public class InstitutionsController implements InstitutionsApi {
      */
     @Override
     public ResponseEntity<AudioTourDto> createAudioTourForInstitution(UUID institutionId, AudioTourCreate audioTourCreate) {
-
-        AudioTourDto created = audioTourService.createTour(audioTourCreate);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        try {
+            AudioTourDto created = audioTourService.createTour(audioTourCreate);
+            return new ResponseEntity<>(created, HttpStatus.CREATED);
+        } catch (ConflictException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (ResourceNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -82,8 +88,12 @@ public class InstitutionsController implements InstitutionsApi {
 
     @Override
     public ResponseEntity<InstitutionDto> getInstitutionById(UUID institutionId) {
-        InstitutionDto institution = institutionService.getInstitutionById(institutionId);
-        return ResponseEntity.ok(institution);
+        try {
+            InstitutionDto institution = institutionService.getInstitutionById(institutionId);
+            return ResponseEntity.ok(institution);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**

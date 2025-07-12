@@ -13,7 +13,6 @@ CREATE TABLE audio_tours (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     audio_url VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     CONSTRAINT fk_institution
         FOREIGN KEY (institution_id) REFERENCES institutions(id)
         ON DELETE CASCADE

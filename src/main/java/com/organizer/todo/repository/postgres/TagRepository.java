@@ -11,5 +11,9 @@ import java.util.UUID;
 @Repository
 public interface TagRepository extends JpaRepository<MyTag, UUID> {
     Optional<MyTag> findByName(String name);
+
+    boolean existsByUUID(UUID uuid);
+
+    Optional<MyTag> findByUuid(UUID uuid);
 }
 

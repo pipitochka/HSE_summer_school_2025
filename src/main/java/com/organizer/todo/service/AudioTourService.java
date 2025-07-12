@@ -8,6 +8,8 @@ import com.organizer.todo.model.postgres.AudioTour;
 import com.organizer.todo.model.postgres.Institution;
 import com.organizer.todo.repository.postgres.AudioTourRepository;
 import com.organizer.todo.repository.postgres.InstitutionRepository;
+import com.organizer.todo.repository.postgres.TagRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ public class AudioTourService {
 
     private final AudioTourRepository audioTourRepository;
     private final InstitutionRepository institutionRepository;
+    private final TagRepository tagRepository;
     private final DtoMapper dtoMapper;
 
     public List<AudioTourDto> listToursByInstitution(UUID institutionId) {
@@ -32,16 +35,36 @@ public class AudioTourService {
                 .toList();
     }
 
+    @Transactional
     public AudioTourDto createTour(AudioTourCreate create) {
         Institution institution = institutionRepository.findById(create.getInstitutionId())
                 .orElseThrow(() -> new ResourceNotFoundException("Institution not found: " + create.getInstitutionId()));
 
+        if (create.getAudioUrl() == null) {
+            throw new ResourceNotFoundException("AudioUrl not found: url");
+        }
+        for (var el : create.getTags()){
+            if (!tagRepository.existsByUUID(el)) {
+                throw new ResourceNotFoundException("Tag not found: " + el);
+            }
+        }
         AudioTour tour = AudioTour.builder()
                 .id(UUID.randomUUID())
                 .title(create.getTitle())
                 .description(create.getDescription().orElse(null))
+                .audioUrl(String.valueOf(create.getAudioUrl()))
                 .institution(institution)
                 .build();
+
+        for (var el : create.getTags()){
+            var tag =  tagRepository.findByUuid(el);
+            if (tag.isPresent()){
+                tour.getTags().add(tag.get());
+            }
+            else{
+                throw new ResourceNotFoundException("Tag not found: " + el);
+            }
+        }
 
         return dtoMapper.toAudioTourDto(audioTourRepository.save(tour));
     }
