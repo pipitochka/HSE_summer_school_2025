@@ -54,11 +54,15 @@ public class AudioTourService {
         if (create.getAudioUrl() == null) {
             throw new ResourceNotFoundException("AudioUrl not found: url");
         }
-        for (var el : create.getTags()){
-            if (!tagRepository.existsById(el)) {
-                throw new ResourceNotFoundException("Tag not found: " + el);
+
+        if (create.getTags() != null) {
+            for (var el : create.getTags()) {
+                if (!tagRepository.existsById(el)) {
+                    throw new ResourceNotFoundException("Tag not found: " + el);
+                }
             }
         }
+
         AudioTour tour = AudioTour.builder()
                 .id(UUID.randomUUID())
                 .title(create.getTitle())
@@ -68,13 +72,14 @@ public class AudioTourService {
                 .available("false")
                 .build();
 
-        for (var el : create.getTags()){
-            var tag =  tagRepository.findById(el);
-            if (tag.isPresent()){
-                tour.getTags().add(tag.get());
-            }
-            else{
-                throw new ResourceNotFoundException("Tag not found: " + el);
+        if (create.getTags() != null) {
+            for (var el : create.getTags()) {
+                var tag = tagRepository.findById(el);
+                if (tag.isPresent()) {
+                    tour.getTags().add(tag.get());
+                } else {
+                    throw new ResourceNotFoundException("Tag not found: " + el);
+                }
             }
         }
 
