@@ -24,6 +24,8 @@ tags:
     description: Управление аудиоэкскурсиями
   - name: Taxonomy
     description: Управление тегами
+  - name: Audio
+    description: Управление локальными аудиофайлами
 
 paths:
   /institutions:
@@ -303,6 +305,77 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/MyError'
+
+  /institutions/{institution_id}/upload:
+    post:
+      tags:
+        - Audio
+      summary: Загрузить файл
+      description: Загружает аудиофайл с метаданными (название, описание, ID учреждения и теги).
+      operationId: uploadAudio
+      security:
+        - BearerAuth: [ platform.admin ]
+      parameters:
+        - $ref: '#/components/parameters/InstitutionId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - title
+              properties:
+                file:
+                  type: string
+                  format: binary
+                title:
+                  type: string
+                description:
+                  type: string
+                  nullable: true
+                tags:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+      responses:
+        '200':
+          description: Файл успешно загружен.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AudioTourDto'
+        '400':
+          description: Неверный формат запроса.
+        '401':
+          description: Требуется аутентификация.
+
+  /institutions/{institution_id}/download/{tour_id}:
+    get:
+      tags:
+        - Audio
+      summary: Скачать файл
+      description: Загружает аудиофайл по идентификатору.
+      operationId: downloadAudio
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/InstitutionId'
+        - $ref: '#/components/parameters/TourId'
+      responses:
+        '200':
+          description: Успешная загрузка файла.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Файл не найден.
+        '401':
+          description: Требуется аутентификация.
 
 components:
   securitySchemes:

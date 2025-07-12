@@ -12,8 +12,8 @@ CREATE TABLE audio_tours (
     institution_id UUID NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    audio_url VARCHAR(255) NOT NULL,
-    is_available integer NOT NULL,
+    audio_url VARCHAR(255),
+    is_available VARCHAR(255) NOT NULL,
     CONSTRAINT fk_institution
         FOREIGN KEY (institution_id) REFERENCES institutions(id)
         ON DELETE CASCADE
@@ -35,14 +35,4 @@ CREATE TABLE audio_tour_tags (
     CONSTRAINT fk_tag FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
 );
 
--- Таблица вложений (например, изображения или доп. материалы к аудиогиду)
-CREATE TABLE attachments (
-    id UUID PRIMARY KEY,
-    audio_tour_id UUID NOT NULL,
-    filename VARCHAR(255) NOT NULL,
-    s3_key VARCHAR(255) NOT NULL UNIQUE,
-    size_bytes BIGINT NOT NULL,
-    uploaded_at TIMESTAMP WITH TIME ZONE NOT NULL,
-    CONSTRAINT fk_audio_tour_attachment FOREIGN KEY (audio_tour_id) REFERENCES audio_tours(id) ON DELETE CASCADE
-);
 

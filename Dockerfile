@@ -1,5 +1,5 @@
 # Этап 1: Собираем приложение с помощью Gradle
-FROM arm64v8/gradle:8.4-jdk17 AS build
+FROM gradle:8.4-jdk17 AS build
 WORKDIR /app
 
 # Копируем только файлы сборки для кэширования зависимостей

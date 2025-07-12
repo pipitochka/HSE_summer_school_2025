@@ -5,15 +5,20 @@ import com.audiotour.api.InstitutionsApi;
 import com.audiotour.dto.*;
 import com.organizer.todo.exception.ConflictException;
 import com.organizer.todo.exception.ResourceNotFoundException;
+import com.organizer.todo.service.AttachmentService;
 import com.organizer.todo.service.AudioTourService;
 import com.organizer.todo.service.InstitutionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,6 +28,10 @@ public class InstitutionsController implements InstitutionsApi {
     private final InstitutionService institutionService;
 
     private final AudioTourService audioTourService;
+
+    private final AttachmentService attachmentService;
+
+
 
     /**
      * POST /institutions/{institution_id}/audio-tours : Создать новую аудиоэкскурсию для учреждения
@@ -144,6 +153,58 @@ public class InstitutionsController implements InstitutionsApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    /**
+     * GET /institutions/{institute_id}/download/{id} : Скачать файл
+     * Загружает аудиофайл по идентификатору.
+     *
+     * @param institutionId (required)
+     * @return Успешная загрузка файла. (status code 200)
+     * or Файл не найден. (status code 404)
+     * or Требуется аутентификация. (status code 401)
+     */
+    @Override
+    public ResponseEntity<Resource> downloadAudio(UUID institutionId, UUID tourId) {
+        try {
+            AttachmentService.DownloadedFile downloadedFile = attachmentService.downloadAttachment(institutionId, tourId);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + downloadedFile.filename() + "\"")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(downloadedFile.resource());
+
+        } catch (ConflictException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    /**
+     * POST /institutions/{institute_id}/upload : Загрузить файл
+     * Загружает аудиофайл с метаданными (название, описание, ID учреждения и теги).
+     *
+     * @param institutionId  (required)
+     * @param file           (required)
+     * @param title          (required)
+     * @param description    (optional)
+     * @param tags           (optional)
+     * @return Файл успешно загружен. (status code 200)
+     * or Неверный формат запроса. (status code 400)
+     * or Требуется аутентификация. (status code 401)
+     */
+    @Override
+    public ResponseEntity<AudioTourDto> uploadAudio(UUID institutionId, MultipartFile file, String title,
+                                                     String description, List<UUID> tags) {
+        try {
+            var value = attachmentService.uploadAttachment(institutionId, file, title, description, tags);
+            return ResponseEntity.ok(value);
+        } catch (ConflictException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 
