@@ -8,11 +8,14 @@ import com.organizer.todo.exception.ResourceNotFoundException;
 import com.organizer.todo.service.AudioTourService;
 import com.organizer.todo.service.InstitutionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -70,6 +73,24 @@ public class InstitutionsController implements InstitutionsApi {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * POST /institutions/{institute_id}/upload : Загрузить файл
+     * Загружает аудиофайл с метаданными (название, описание, ID учреждения и теги).
+     *
+     * @param institutionId  (required)
+     * @param file           (required)
+     * @param title          (required)
+     * @param institutionId2 (required)
+     * @param description    (optional)
+     * @param tags           (optional)
+     * @return Файл успешно загружен. (status code 200)
+     * or Неверный формат запроса. (status code 400)
+     * or Требуется аутентификация. (status code 401)
+     */
+    @Override
+    public ResponseEntity<Void> uploadAudio(UUID institutionId, MultipartFile file, String title, UUID institutionId2, String description, List<UUID> tags) {
+        return null;
+    }
 
 
     @Override
@@ -144,6 +165,20 @@ public class InstitutionsController implements InstitutionsApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    /**
+     * GET /institutions/{institute_id}/download/{id} : Скачать файл
+     * Загружает аудиофайл по идентификатору.
+     *
+     * @param institutionId (required)
+     * @return Успешная загрузка файла. (status code 200)
+     * or Файл не найден. (status code 404)
+     * or Требуется аутентификация. (status code 401)
+     */
+    @Override
+    public ResponseEntity<Resource> downloadAudio(UUID institutionId) {
+        return null;
     }
 
 

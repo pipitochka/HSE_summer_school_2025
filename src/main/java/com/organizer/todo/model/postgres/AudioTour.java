@@ -38,7 +38,7 @@ public class AudioTour {
     )
     private Set<MyTag> tags;
 
-    @Column(name = "is_avaliable")
+    @Column(name = "is_available")
     String available;
 }
 
