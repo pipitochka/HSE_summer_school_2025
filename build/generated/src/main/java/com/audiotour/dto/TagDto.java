@@ -19,7 +19,7 @@ import jakarta.annotation.Generated;
  * TagDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-11T16:34:38.753307+03:00[Europe/Moscow]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-07-12T09:49:41.309338+03:00[Europe/Moscow]")
 public class TagDto {
 
   private UUID id;
