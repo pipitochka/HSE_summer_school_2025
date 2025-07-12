@@ -2,6 +2,7 @@ package com.organizer.todo.controller;
 
 import com.audiotour.api.TagsApi;
 import com.audiotour.dto.*;
+import com.organizer.todo.exception.ConflictException;
 import com.organizer.todo.model.postgres.MyTag;
 import com.organizer.todo.service.TagService;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,13 @@ public class TagController implements TagsApi {
      */
     @Override
     public ResponseEntity<TagDto> createTag(CreateTagRequest createTagRequest) {
-        TagDto created = tagService.createTag(createTagRequest.getName());
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        try {
+            TagDto created = tagService.createTag(createTagRequest.getName());
+            return new ResponseEntity<>(created, HttpStatus.CREATED);
+        } catch (ConflictException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
     }
 
     @Override

@@ -9,6 +9,9 @@ import java.util.UUID;
 
 @Repository
 public interface InstitutionRepository extends JpaRepository<Institution, UUID> {
-    // Добавьте методы фильтрации по владельцу, если будет user_id
+
+    boolean existsByName(String name);
+
+    boolean existsById(UUID uuid);
 }
 

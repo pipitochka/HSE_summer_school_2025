@@ -48,12 +48,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InstitutionDto'
-        '403':
-          description: Доступ запрещен.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/MyError'
+        '409':
+          description: Институт уже существует.
     get:
       tags:
         - Institutions
@@ -213,39 +209,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AudioTourDetails'
+                $ref: '#/components/schemas/AudioTourDto'
         '404':
           description: Учреждение или экскурсия не найдены.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/MyError'
-    patch:
-      tags:
-        - Audio Tours
-      summary: Обновить аудиоэкскурсию
-      description: Администратор учреждения обновляет данные своей экскурсии.
-      operationId: updateNestedAudioTour
-      security:
-        - BearerAuth: [tours.write]
-      parameters:
-        - $ref: '#/components/parameters/InstitutionId'
-        - $ref: '#/components/parameters/TourId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AudioTourUpdate'
-      responses:
-        '200':
-          description: Экскурсия успешно обновлена.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AudioTourDto'
-        '403':
-          description: Доступ запрещен.
           content:
             application/problem+json:
               schema:
@@ -314,6 +280,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TagDto'
+        '409':
+          description: Тег уже существует.
 
   /tags/{tag_id}:
     delete:
@@ -495,7 +463,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/AudioTourSummary'
+            $ref: '#/components/schemas/AudioTourDto'
         total_elements:
           type: integer
           format: int64
@@ -514,7 +482,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/Institution'
+            $ref: '#/components/schemas/InstitutionDto'
         total_elements:
           type: integer
           format: int64
@@ -527,23 +495,6 @@ components:
         size:
           type: integer
           format: int32
-    AttachmentMetadata:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        filename:
-          type: string
-        url:
-          type: string
-          format: uri
-        size_bytes:
-          type: integer
-          format: int64
-        uploaded_at:
-          type: string
-          format: date-time
     InstitutionDto:
       type: object
       properties:
@@ -557,20 +508,6 @@ components:
         websiteUrl:
           type: string
           format: uri
-    InstitutionUpdate:
-      type: object
-      properties:
-        name:
-          type: string
-          nullable: true
-        description:
-          type: string
-          nullable: true
-        websiteUrl:
-          type: string
-          format: uri
-          nullable: true
-
     AudioTourDto:
       type: object
       properties:
@@ -593,9 +530,9 @@ components:
           items:
             type: string
             format: uuid
-        createdAt:
-          type: string
-          format: date-time
+        isUrl:
+          type: integer
+          format: int32
     TagCreate:
       type: object
       required:

@@ -50,7 +50,7 @@ public class DtoMapper {
                 .name(tag.getName());
     }
 
-    public PaginatedInstitutions toPaginatedInstitutions(Page<com.audiotour.dto.Institution> list) {
+    public PaginatedInstitutions toPaginatedInstitutions(Page<com.audiotour.dto.InstitutionDto> list) {
         PaginatedInstitutions paginatedInstitutions = new PaginatedInstitutions();
 
         paginatedInstitutions.setItems(list.getContent());
@@ -60,6 +60,18 @@ public class DtoMapper {
         paginatedInstitutions.setTotalPages(list.getTotalPages());
 
         return paginatedInstitutions;
+    }
+
+    public PaginatedAudioTours toPaginatedAudioTours(Page<com.audiotour.dto.AudioTourDto> list) {
+        PaginatedAudioTours paginatedAudioTours = new PaginatedAudioTours();
+
+        paginatedAudioTours.setItems(list.getContent());
+        paginatedAudioTours.setPage(list.getPageable().getPageNumber());
+        paginatedAudioTours.setTotalElements(list.getTotalElements());
+        paginatedAudioTours.setSize(list.getPageable().getPageSize());
+        paginatedAudioTours.setTotalPages(list.getTotalPages());
+
+        return paginatedAudioTours;
     }
 }
 

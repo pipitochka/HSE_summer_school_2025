@@ -11,6 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Getter
 @Table(name = "audio_tours")
 public class AudioTour {
     @Id
@@ -37,7 +38,7 @@ public class AudioTour {
     )
     private Set<MyTag> tags;
 
-    @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
+    @Column(name = "is_avaliable")
+    String available;
 }
 
