@@ -2,7 +2,6 @@ package com.organizer.todo.service;
 
 import com.audiotour.dto.InstitutionDto;
 import com.audiotour.dto.InstitutionCreate;
-import com.audiotour.dto.InstitutionUpdate;
 import com.audiotour.dto.PaginatedInstitutions;
 import com.organizer.todo.exception.ConflictException;
 import com.organizer.todo.exception.ResourceNotFoundException;
