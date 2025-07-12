@@ -310,6 +310,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TagDto'
+        '409':
+          description: Тег уже существует.
 
   /tags/{tag_id}:
     delete:
