@@ -1,11 +1,14 @@
 package com.organizer.todo.service;
 
 import com.audiotour.dto.AttachmentMetadata;
+import com.audiotour.dto.AudioTourDto;
+import com.organizer.todo.exception.ConflictException;
 import com.organizer.todo.exception.ResourceNotFoundException;
 import com.organizer.todo.model.postgres.Attachment;
 import com.organizer.todo.model.postgres.AudioTour;
 import com.organizer.todo.repository.postgres.AttachmentRepository;
 import com.organizer.todo.repository.postgres.AudioTourRepository;
+import com.organizer.todo.repository.postgres.InstitutionRepository;
 import io.minio.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,18 +31,31 @@ public class AttachmentService {
     private final MinioClient minioClient;
     private final AttachmentRepository attachmentRepository;
     private final AudioTourRepository audioTourRepository;
+    private final InstitutionRepository institutionRepository;
     private final DtoMapper dtoMapper;
 
     @Value("${minio.bucket-name}")
     private String bucketName;
 
     @Transactional
-    public AttachmentMetadata uploadAttachment(UUID tourId, MultipartFile file) {
-        AudioTour audioTour = audioTourRepository.findById(tourId)
-                .orElseThrow(() -> new ResourceNotFoundException("AudioTour not found: " + tourId));
-
+    public AudioTourDto uploadAttachment(UUID institutionId, MultipartFile file, String title,
+                                         UUID institutionId2, String description, List<UUID> tags) {
         try {
-            String s3Key = UUID.randomUUID() + "-" + file.getOriginalFilename();
+
+            var institution = institutionRepository.findById(institutionId2);
+            if (!institution.isPresent()) {
+                throw new ResourceNotFoundException("Institution not found" + institutionId2);
+            }
+
+            AudioTour audioTour = AudioTour.builder()
+                    .id(UUID.randomUUID())
+                    .title(title)
+                    .description(description)
+                    .institution(institution.get())
+                    .available("true")
+                    .build();
+
+            String s3Key = audioTour.getId() + "-" + audioTour.getTitle();
 
             minioClient.putObject(
                     PutObjectArgs.builder()
@@ -49,16 +66,7 @@ public class AttachmentService {
                             .build()
             );
 
-            Attachment attachment = Attachment.builder()
-                    .id(UUID.randomUUID())
-                    .audioTour(audioTour)
-                    .filename(file.getOriginalFilename())
-                    .s3Key(s3Key)
-                    .sizeBytes(file.getSize())
-                    .uploadedAt(OffsetDateTime.now())
-                    .build();
-
-            return dtoMapper.toAttachmentMetadataDto(attachmentRepository.save(attachment));
+            return dtoMapper.toAudioTourDto(audioTourRepository.save(audioTour));
 
         } catch (Exception e) {
             log.error("Failed to upload attachment", e);
@@ -68,18 +76,27 @@ public class AttachmentService {
 
     public record DownloadedFile(InputStreamResource resource, String filename) {}
 
-    public DownloadedFile downloadAttachment(UUID attachmentId) {
-        Attachment attachment = attachmentRepository.findById(attachmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Attachment not found: " + attachmentId));
+    public DownloadedFile downloadAttachment(UUID institutionId, UUID tourId) {
+        AudioTour audioTour = audioTourRepository.findById(tourId)
+                .orElseThrow(() -> new ResourceNotFoundException("Attachment not found: " + tourId));
+
+        if (!audioTour.getInstitution().getId().equals(institutionId)) {
+            throw new ConflictException("Institution id mismatch");
+        }
+        if (audioTour.getAvailable() == "false"){
+            throw new ConflictException("AudioTour id is not available");
+        }
+
+        String s3Key = audioTour.getId() + audioTour.getTitle();
 
         try {
             InputStream stream = minioClient.getObject(
                     GetObjectArgs.builder()
                             .bucket(bucketName)
-                            .object(attachment.getS3Key())
+                            .object(s3Key)
                             .build()
             );
-            return new DownloadedFile(new InputStreamResource(stream), attachment.getFilename());
+            return new DownloadedFile(new InputStreamResource(stream), audioTour.getTitle());
         } catch (Exception e) {
             log.error("Download failed", e);
             throw new RuntimeException("Download failed", e);

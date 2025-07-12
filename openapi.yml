@@ -347,12 +347,16 @@ paths:
       responses:
         '200':
           description: Файл успешно загружен.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AudioTourDto'
         '400':
           description: Неверный формат запроса.
         '401':
           description: Требуется аутентификация.
 
-  /institutions/{institute_id}/download/{id}:
+  /institutions/{institute_id}/download/{tour_id}:
     get:
       tags:
         - Audio
@@ -363,6 +367,7 @@ paths:
         - BearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/InstitutionId'
+        - $ref: '#/components/parameters/TourId'
       responses:
         '200':
           description: Успешная загрузка файла.
