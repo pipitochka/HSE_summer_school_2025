@@ -6,7 +6,7 @@ server:
 spring:
   # --- PostgreSQL ---
   datasource:
-    url: jdbc:postgresql://localhost:5432/todo_db
+    url: jdbc:postgresql://localhost:5433/todo_db
     username: user
     password: password
   jpa:
