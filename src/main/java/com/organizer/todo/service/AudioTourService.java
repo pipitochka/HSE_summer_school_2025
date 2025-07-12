@@ -115,7 +115,7 @@ public class AudioTourService {
 
     public PaginatedAudioTours listAudiTours(Pageable pageable, UUID institutionId) {
         return dtoMapper.toPaginatedAudioTours(audioTourRepository
-                .findAllByInstitution_Id(institutionId, pageable)
+                .findAllByInstitutionId(institutionId, pageable)
                 .map(dtoMapper::toAudioTourDto));
     }
 }

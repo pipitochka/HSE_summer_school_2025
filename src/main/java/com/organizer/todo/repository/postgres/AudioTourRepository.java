@@ -14,7 +14,7 @@ import java.util.UUID;
 @Repository
 public interface AudioTourRepository extends JpaRepository<AudioTour, UUID> {
     List<AudioTour> findAllByInstitution(Institution institution);
-    Page<AudioTour> findAllByInstitution_Id(UUID institutionId, Pageable pageable);
+    Page<AudioTour> findAllByInstitutionId(UUID institutionId, Pageable pageable);
 
 }
 

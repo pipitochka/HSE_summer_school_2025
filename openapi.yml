@@ -530,9 +530,9 @@ components:
           items:
             type: string
             format: uuid
-        createdAt:
-          type: string
-          format: date-time
+        isUrl:
+          type: integer
+          format: int32
     TagCreate:
       type: object
       required:

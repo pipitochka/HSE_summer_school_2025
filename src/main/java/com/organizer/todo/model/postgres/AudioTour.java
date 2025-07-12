@@ -37,5 +37,8 @@ public class AudioTour {
         inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private Set<MyTag> tags;
+
+    @Column(name = "is_avaliable")
+    String available;
 }
 
