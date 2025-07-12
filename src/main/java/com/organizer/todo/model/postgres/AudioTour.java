@@ -37,8 +37,5 @@ public class AudioTour {
         inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private Set<MyTag> tags;
-
-    @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
 }
 

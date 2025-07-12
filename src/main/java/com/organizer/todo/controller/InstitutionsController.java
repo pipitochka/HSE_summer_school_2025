@@ -70,20 +70,6 @@ public class InstitutionsController implements InstitutionsApi {
         return ResponseEntity.ok(result);
     }
 
-    /**
-     * PATCH /institutions/{institution_id}/audio-tours/{tour_id} : Обновить аудиоэкскурсию
-     * Администратор учреждения обновляет данные своей экскурсии.
-     *
-     * @param institutionId   (required)
-     * @param tourId          (required)
-     * @param audioTourUpdate (required)
-     * @return Экскурсия успешно обновлена. (status code 200)
-     * or Доступ запрещен. (status code 403)
-     */
-    @Override
-    public ResponseEntity<AudioTourDto> updateNestedAudioTour(UUID institutionId, UUID tourId, AudioTourUpdate audioTourUpdate) {
-        return null;
-    }
 
 
     @Override
@@ -106,8 +92,14 @@ public class InstitutionsController implements InstitutionsApi {
      * or Учреждение или экскурсия не найдены. (status code 404)
      */
     @Override
-    public ResponseEntity<AudioTourDetails> getNestedAudioTourById(UUID institutionId, UUID tourId) {
-        return null;
+    public ResponseEntity<AudioTourDto> getNestedAudioTourById(UUID institutionId, UUID tourId) {
+        try{
+            return ResponseEntity.ok(audioTourService.findTourById(institutionId, tourId));
+        } catch (ConflictException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -122,7 +114,8 @@ public class InstitutionsController implements InstitutionsApi {
      */
     @Override
     public ResponseEntity<PaginatedAudioTours> listInstitutionTours(UUID institutionId, Integer page, Integer size) {
-        return null;
+        PaginatedAudioTours result = audioTourService.listAudiTours(Pageable.ofSize(size).withPage(page), institutionId);
+        return ResponseEntity.ok(result);
     }
 
     @Override
@@ -142,7 +135,15 @@ public class InstitutionsController implements InstitutionsApi {
      */
     @Override
     public ResponseEntity<Void> deleteNestedAudioTour(UUID institutionId, UUID tourId) {
-        return null;
+        try {
+            audioTourService.deleteTour(institutionId, tourId);
+            return ResponseEntity.noContent().build();
+        } catch (ConflictException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
 

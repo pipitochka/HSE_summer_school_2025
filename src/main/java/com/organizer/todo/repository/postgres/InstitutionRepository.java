@@ -12,6 +12,6 @@ public interface InstitutionRepository extends JpaRepository<Institution, UUID> 
 
     boolean existsByName(String name);
 
-    boolean existsByUuid(UUID uuid);
+    boolean existsById(UUID uuid);
 }
 

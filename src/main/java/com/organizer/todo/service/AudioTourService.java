@@ -1,8 +1,7 @@
 package com.organizer.todo.service;
 
-import com.audiotour.dto.AudioTourCreate;
-import com.audiotour.dto.AudioTourDto;
-import com.audiotour.dto.AudioTourUpdate;
+import com.audiotour.dto.*;
+import com.organizer.todo.exception.ConflictException;
 import com.organizer.todo.exception.ResourceNotFoundException;
 import com.organizer.todo.model.postgres.AudioTour;
 import com.organizer.todo.model.postgres.Institution;
@@ -11,10 +10,10 @@ import com.organizer.todo.repository.postgres.InstitutionRepository;
 import com.organizer.todo.repository.postgres.TagRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -44,7 +43,7 @@ public class AudioTourService {
             throw new ResourceNotFoundException("AudioUrl not found: url");
         }
         for (var el : create.getTags()){
-            if (!tagRepository.existsByUUID(el)) {
+            if (!tagRepository.existsById(el)) {
                 throw new ResourceNotFoundException("Tag not found: " + el);
             }
         }
@@ -57,7 +56,7 @@ public class AudioTourService {
                 .build();
 
         for (var el : create.getTags()){
-            var tag =  tagRepository.findByUuid(el);
+            var tag =  tagRepository.findById(el);
             if (tag.isPresent()){
                 tour.getTags().add(tag.get());
             }
@@ -79,12 +78,45 @@ public class AudioTourService {
         return dtoMapper.toAudioTourDto(audioTourRepository.save(tour));
     }
 
-    public void deleteTour(UUID id) {
-        audioTourRepository.deleteById(id);
+    @Transactional
+    public void deleteTour(UUID institutionId, UUID tourId) {
+        var institution = institutionRepository.findById(institutionId);
+        if (institution.isEmpty()){
+            throw new ResourceNotFoundException("Institution not found: " + institutionId);
+        }
+        var audioTour = audioTourRepository.findById(tourId);
+        if (audioTour.isEmpty()){
+            throw new ResourceNotFoundException("AudioTour not found: " + tourId);
+        }
+        if (audioTour.get().getInstitution().getId() != institution.get().getId()){
+            throw new ConflictException("AudioTour already has another institution");
+        }
+
+        audioTourRepository.deleteById(audioTour.get().getId());
     }
 
-    public Optional<AudioTourDto> findTourById(UUID id) {
-        return null;
+    public AudioTourDto findTourById(UUID institutionId, UUID tourId) {
+        var institution = institutionRepository.findById(institutionId);
+        if (institution.isEmpty()){
+            throw new ResourceNotFoundException("Institution not found: " + institutionId);
+        }
+
+        var audioTour = audioTourRepository.findById(tourId);
+        if (audioTour.isEmpty()){
+            throw new ResourceNotFoundException("AudioTour not found: " + tourId);
+        }
+
+        if (audioTour.get().getInstitution().getId() != institution.get().getId()){
+            throw new ConflictException("AudioTour already has another institution");
+        }
+
+        return dtoMapper.toAudioTourDto(audioTour.get());
+    }
+
+    public PaginatedAudioTours listAudiTours(Pageable pageable, UUID institutionId) {
+        return dtoMapper.toPaginatedAudioTours(audioTourRepository
+                .findAllByInstitution_Id(institutionId, pageable)
+                .map(dtoMapper::toAudioTourDto));
     }
 }
 
