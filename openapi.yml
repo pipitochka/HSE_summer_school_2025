@@ -306,7 +306,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/MyError'
 
-  /institutions/{institute_id}/upload:
+  /institutions/{institution_id}/upload:
     post:
       tags:
         - Audio
@@ -326,7 +326,6 @@ paths:
               required:
                 - file
                 - title
-                - institutionId
               properties:
                 file:
                   type: string
@@ -336,9 +335,6 @@ paths:
                 description:
                   type: string
                   nullable: true
-                institutionId:
-                  type: string
-                  format: uuid
                 tags:
                   type: array
                   items:
@@ -356,7 +352,7 @@ paths:
         '401':
           description: Требуется аутентификация.
 
-  /institutions/{institute_id}/download/{tour_id}:
+  /institutions/{institution_id}/download/{tour_id}:
     get:
       tags:
         - Audio

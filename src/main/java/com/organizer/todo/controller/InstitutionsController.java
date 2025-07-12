@@ -79,6 +79,8 @@ public class InstitutionsController implements InstitutionsApi {
         return ResponseEntity.ok(result);
     }
 
+
+
     @Override
     public ResponseEntity<InstitutionDto> getInstitutionById(UUID institutionId) {
         try {
@@ -186,7 +188,6 @@ public class InstitutionsController implements InstitutionsApi {
      * @param institutionId  (required)
      * @param file           (required)
      * @param title          (required)
-     * @param institutionId2 (required)
      * @param description    (optional)
      * @param tags           (optional)
      * @return Файл успешно загружен. (status code 200)
@@ -195,9 +196,17 @@ public class InstitutionsController implements InstitutionsApi {
      */
     @Override
     public ResponseEntity<AudioTourDto> uploadAudio(UUID institutionId, MultipartFile file, String title,
-                                                    UUID institutionId2, String description, List<UUID> tags) {
-        attachmentService.uploadAttachment(institutionId,  file,  title, institutionId2,  description, tags);
-        return null;
+                                                     String description, List<UUID> tags) {
+        try {
+            var value = attachmentService.uploadAttachment(institutionId, file, title, description, tags);
+            return ResponseEntity.ok(value);
+        } catch (ConflictException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
+
 }
 

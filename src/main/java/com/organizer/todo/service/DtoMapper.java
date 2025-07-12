@@ -2,7 +2,6 @@ package com.organizer.todo.service;
 
 
 import com.audiotour.dto.*;
-import com.organizer.todo.model.postgres.Attachment;
 import com.organizer.todo.model.postgres.AudioTour;
 import com.organizer.todo.model.postgres.Institution;
 import com.organizer.todo.model.postgres.MyTag;
@@ -13,14 +12,6 @@ import java.util.List;
 
 @Component
 public class DtoMapper {
-
-    public AttachmentMetadata toAttachmentMetadataDto(Attachment attachment) {
-        return new AttachmentMetadata()
-                .id(attachment.getId())
-                .filename(attachment.getFilename())
-                .sizeBytes(attachment.getSizeBytes())
-                .uploadedAt(attachment.getUploadedAt());
-    }
 
     public InstitutionDto toInstitutionDto(Institution institution) {
         return new InstitutionDto()

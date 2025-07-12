@@ -3,7 +3,6 @@ package com.organizer.todo.service;
 import com.audiotour.dto.*;
 import com.organizer.todo.exception.ConflictException;
 import com.organizer.todo.exception.ResourceNotFoundException;
-import com.organizer.todo.model.postgres.Attachment;
 import com.organizer.todo.model.postgres.AudioTour;
 import com.organizer.todo.model.postgres.Institution;
 import com.organizer.todo.repository.postgres.AudioTourRepository;

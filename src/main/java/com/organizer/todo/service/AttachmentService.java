@@ -4,11 +4,10 @@ import com.audiotour.dto.AttachmentMetadata;
 import com.audiotour.dto.AudioTourDto;
 import com.organizer.todo.exception.ConflictException;
 import com.organizer.todo.exception.ResourceNotFoundException;
-import com.organizer.todo.model.postgres.Attachment;
 import com.organizer.todo.model.postgres.AudioTour;
-import com.organizer.todo.repository.postgres.AttachmentRepository;
 import com.organizer.todo.repository.postgres.AudioTourRepository;
 import com.organizer.todo.repository.postgres.InstitutionRepository;
+import com.organizer.todo.repository.postgres.TagRepository;
 import io.minio.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +28,9 @@ import java.util.UUID;
 public class AttachmentService {
 
     private final MinioClient minioClient;
-    private final AttachmentRepository attachmentRepository;
     private final AudioTourRepository audioTourRepository;
     private final InstitutionRepository institutionRepository;
+    private final TagRepository tagRepository;
     private final DtoMapper dtoMapper;
 
     @Value("${minio.bucket-name}")
@@ -39,12 +38,20 @@ public class AttachmentService {
 
     @Transactional
     public AudioTourDto uploadAttachment(UUID institutionId, MultipartFile file, String title,
-                                         UUID institutionId2, String description, List<UUID> tags) {
+                                          String description, List<UUID> tags) {
         try {
 
-            var institution = institutionRepository.findById(institutionId2);
+            var institution = institutionRepository.findById(institutionId);
             if (!institution.isPresent()) {
-                throw new ResourceNotFoundException("Institution not found" + institutionId2);
+                throw new ResourceNotFoundException("Institution not found" + institutionId);
+            }
+
+            if (tags != null && !tags.isEmpty()) {
+                for (var tag : tags) {
+                    if (!tagRepository.existsById(tag)) {
+                        throw new ResourceNotFoundException("Tag not found" + tag);
+                    }
+                }
             }
 
             AudioTour audioTour = AudioTour.builder()
@@ -56,6 +63,16 @@ public class AttachmentService {
                     .build();
 
             String s3Key = audioTour.getId() + "-" + audioTour.getTitle();
+
+            if (tags != null && !tags.isEmpty()) {
+                for (var tag : tags) {
+                    var nice = tagRepository.findById(tag);
+                    if (nice.isPresent()) {
+                        audioTour.getTags().add(nice.get());
+                    }
+                }
+            }
+
 
             minioClient.putObject(
                     PutObjectArgs.builder()
@@ -87,7 +104,7 @@ public class AttachmentService {
             throw new ConflictException("AudioTour id is not available");
         }
 
-        String s3Key = audioTour.getId() + audioTour.getTitle();
+        String s3Key = audioTour.getId() + "-" + audioTour.getTitle();
 
         try {
             InputStream stream = minioClient.getObject(
@@ -100,25 +117,6 @@ public class AttachmentService {
         } catch (Exception e) {
             log.error("Download failed", e);
             throw new RuntimeException("Download failed", e);
-        }
-    }
-
-    @Transactional
-    public void deleteAttachment(UUID attachmentId) {
-        Attachment attachment = attachmentRepository.findById(attachmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Attachment not found: " + attachmentId));
-
-        try {
-            minioClient.removeObject(
-                    RemoveObjectArgs.builder()
-                            .bucket(bucketName)
-                            .object(attachment.getS3Key())
-                            .build()
-            );
-            attachmentRepository.delete(attachment);
-        } catch (Exception e) {
-            log.error("Delete failed", e);
-            throw new RuntimeException("Delete failed", e);
         }
     }
 }
