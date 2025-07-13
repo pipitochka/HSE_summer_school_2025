@@ -52,7 +52,12 @@ dependencies {
 	// S3 (MinIO)
 	implementation("io.minio:minio:8.5.9")
 
-	// Utils
+    //prometheus
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-registry-prometheus")
+
+
+    // Utils
 	implementation("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
