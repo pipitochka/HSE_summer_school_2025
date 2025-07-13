@@ -61,8 +61,6 @@ public class AttachmentService {
                     .available("true")
                     .build();
 
-            String s3Key = audioTour.getId() + "-" + audioTour.getTitle();
-
             if (tags != null && !tags.isEmpty()) {
                 for (var tag : tags) {
                     var nice = tagRepository.findById(tag);
@@ -72,10 +70,16 @@ public class AttachmentService {
                 }
             }
 
+            String s3Key = audioTour.getId() + "-" + audioTour.getTitle();
+            String currentBucketName = bucketName + audioTour.getInstitution().getName();
+
+            if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(currentBucketName).build())) {
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(currentBucketName).build());
+            }
 
             minioClient.putObject(
                     PutObjectArgs.builder()
-                            .bucket(bucketName)
+                            .bucket(currentBucketName)
                             .object(s3Key)
                             .stream(file.getInputStream(), file.getSize(), -1)
                             .contentType(file.getContentType())
