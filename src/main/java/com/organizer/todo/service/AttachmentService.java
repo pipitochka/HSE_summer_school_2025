@@ -71,20 +71,24 @@ public class AttachmentService {
             }
 
             String s3Key = audioTour.getId() + "-" + audioTour.getTitle();
-            String currentBucketName = bucketName + audioTour.getInstitution().getName();
 
-            if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(currentBucketName).build())) {
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(currentBucketName).build());
+            if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
+                throw new ConflictException("Bucket does not exist");
             }
 
-            minioClient.putObject(
-                    PutObjectArgs.builder()
-                            .bucket(currentBucketName)
-                            .object(s3Key)
-                            .stream(file.getInputStream(), file.getSize(), -1)
-                            .contentType(file.getContentType())
-                            .build()
-            );
+            try {
+                minioClient.putObject(
+                        PutObjectArgs.builder()
+                                .bucket(bucketName)
+                                .object(s3Key)
+                                .stream(file.getInputStream(), file.getSize(), -1)
+                                .contentType(file.getContentType())
+                                .build()
+                );
+
+            } catch (Exception e) {
+                throw new ConflictException(e.getMessage());
+            }
 
             return dtoMapper.toAudioTourDto(audioTourRepository.save(audioTour));
 
